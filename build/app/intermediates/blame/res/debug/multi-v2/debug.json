@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/sls/Desktop/midlandfinal/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
+            "outputFile": "/Users/sls/Desktop/mid/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
             "map": [
                 {
-                    "source": "/Users/sls/Desktop/midlandfinal/android/app/src/main/res/values/styles.xml",
+                    "source": "/Users/sls/Desktop/mid/android/app/src/main/res/values/styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
