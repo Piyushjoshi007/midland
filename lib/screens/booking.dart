@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Booking extends StatefulWidget {
-  static const String id = 'booking';
+  Booking({Key key}) : super(key: key);
 
   _BookingState createState() => _BookingState();
 }
@@ -9,12 +9,11 @@ class Booking extends StatefulWidget {
 class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Choose a time to book'),
-        ),
-
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Text('yo'),
+        ],
       ),
     );
   }

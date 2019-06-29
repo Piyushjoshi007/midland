@@ -130,7 +130,7 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 5, 0, 9),
                       child: Icon(
-                        FontAwesomeIcons.envelopeOpen,
+                        FontAwesomeIcons.mobileAlt,
                         size: 25,
                       ),
                     ),
@@ -146,7 +146,7 @@ class Login extends StatelessWidget {
                       onPressed: () {},
                       child: Center(
                         child: Text(
-                          'Continue with Email',
+                          'Continue with Number',
                           style: TextStyle(
                             fontSize: 22,
                             color: Color(0xffCCCFD0),
