@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:midlandfinal/screens/admission.dart';
 import 'package:midlandfinal/screens/cart.dart';
 
 class Home extends StatefulWidget {
+  
   static const String id = 'homescreen2';
 
   _HomeState createState() => _HomeState();
@@ -24,22 +26,46 @@ class _HomeState extends State<Home> {
               bottom: TabBar(
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: new BubbleTabIndicator(
-                  indicatorHeight: 50.0,
+                  indicatorHeight: 65.0,
                   indicatorColor: Colors.black38,
                   tabBarIndicatorSize: TabBarIndicatorSize.tab,
                 ),
                 tabs: <Widget>[
                   Tab(
-                      icon: Icon(
-                    FontAwesomeIcons.calendarCheck,
-                    color: Color(0xffF7BC45),
-                  )),
+                    icon: Icon(
+                      FontAwesomeIcons.calendarCheck,
+                      color: Color(0xffF7BC45),
+                    ),
+                    child: Text(
+                      'Book',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                   Tab(
-                      icon: Icon(FontAwesomeIcons.fileSignature,
-                          color: Color(0xffF7BC45))),
+                    icon: Icon(FontAwesomeIcons.fileSignature,
+                        color: Color(0xffF7BC45)),
+                    child: Text(
+                      'Admit',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                   Tab(
-                      icon: Icon(FontAwesomeIcons.cartPlus,
-                          color: Color(0xffF7BC45))),
+                    icon: Icon(FontAwesomeIcons.newspaper,
+                        color: Color(0xffF7BC45)),
+                    child: Text(
+                      'News',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               title: Text(
