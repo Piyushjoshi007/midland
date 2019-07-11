@@ -5,22 +5,29 @@ import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+// // Example holidays
+// final Map<DateTime, List> _holidays = {
+//   DateTime(2019, 1, 1): ['New Year\'s Day'],
+//   DateTime(2019, 1, 6): ['Epiphany'],
+//   DateTime(2019, 2, 14): ['Valentine\'s Day'],
+//   DateTime(2019, 4, 21): ['Easter Sunday'],
+//   DateTime(2019, 4, 22): ['Easter Monday'],
+// };
+
+String date = DateTime.now().day.toString();
+String month = DateTime.now().month.toString();
+String year = DateTime.now().year.toString();
+// bool color = true;
+// Color colour = Colors.white;
 
 
-
-// Example holidays
-final Map<DateTime, List> _holidays = {
-  DateTime(2019, 1, 1): ['New Year\'s Day'],
-  DateTime(2019, 1, 6): ['Epiphany'],
-  DateTime(2019, 2, 14): ['Valentine\'s Day'],
-  DateTime(2019, 4, 21): ['Easter Sunday'],
-  DateTime(2019, 4, 22): ['Easter Monday'],
-};
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
+  
+
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -30,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   DateTime _selectedDay;
   Map<DateTime, List> _events;
   Map<DateTime, List> _visibleEvents;
-  Map<DateTime, List> _visibleHolidays;
   List _selectedEvents;
   AnimationController _controller;
 
@@ -39,49 +45,92 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.initState();
     _selectedDay = DateTime.now();
     _events = {
-      _selectedDay.subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0'],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
-      _selectedDay.subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      _selectedDay.subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
-      _selectedDay.subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
       _selectedDay: [
-        '6:00 AM - 7:00 AM', 
-        '7:00 AM - 8:00 AM',
-        '8:00 AM - 9:00 AM',
-        '9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM',
-        '11:00 AM - 12:00 AM',
-        '12:00 PM - 1:00 PM',
-        '1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM',
-        '3:00 PM - 4:00 PM',
-        '4:00 PM - 5:00 PM',
-        '5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM',
-        '7:00 PM - 8:00 PM',
-        '8:00 PM - 9:00 PM',
-        '9:00 PM - 10:00 PM',
+        '6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
         '10:00 PM - 11:00 PM',
-
       ],
-      _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
-      _selectedDay.add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      _selectedDay.add(Duration(days: 17)): ['Event A12', 'Event B12', 'Event C12', 'Event D12'],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      _selectedDay.add(Duration(days: 26)): ['Event A14', 'Event B14', 'Event C14'],
+      _selectedDay.add(Duration(days: 1)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 2)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 3)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 4)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 5)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 6)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 7)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 8)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 9)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 10)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 11)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 12)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 13)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
+         _selectedDay.add(Duration(days: 14)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',]).toList(),
     };
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
-    _visibleHolidays = _holidays;
+    // _visibleHolidays = _holidays;
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 500),
     );
 
     _controller.forward();
@@ -104,13 +153,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
       );
 
-      _visibleHolidays = Map.fromEntries(
-        _holidays.entries.where(
-          (entry) =>
-              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-              entry.key.isBefore(last.add(const Duration(days: 1))),
-        ),
-      );
+      
+
+      // _visibleHolidays = Map.fromEntries(
+      //   _holidays.entries.where(
+      //     (entry) =>
+      //         entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
+      //         entry.key.isBefore(last.add(const Duration(days: 1))),
+      //   ),
+      // );
     });
   }
 
@@ -132,29 +183,31 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   // Simple TableCalendar configuration (using Styles)
-  Widget _buildTableCalendar() {
+  Widget _buildTableCalendar(){
     return TableCalendar(
+      headerVisible: true,
+      startDay: DateTime.now().subtract(Duration(days: 1)),
+      endDay: DateTime.now().add(Duration(days: 13)),
       locale: 'en_US',
       events: _visibleEvents,
-      holidays: _visibleHolidays,
-      initialCalendarFormat: CalendarFormat.twoWeeks,
+      initialCalendarFormat: CalendarFormat.week,
       formatAnimation: FormatAnimation.slide,
       startingDayOfWeek: StartingDayOfWeek.monday,
-      availableGestures: AvailableGestures.none,
+      availableGestures: AvailableGestures.all,
       availableCalendarFormats: const {
-        CalendarFormat.twoWeeks: '',
+        CalendarFormat.week: '',
       },
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         todayColor: Colors.deepOrange[200],
       ),
-      headerStyle: HeaderStyle(
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-      ),
+      // headerStyle: HeaderStyle(
+      //   formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+      //   formatButtonDecoration: BoxDecoration(
+      //     color: Colors.deepOrange[400],
+      //     borderRadius: BorderRadius.circular(16.0),
+      //   ),
+      // ),
       onDaySelected: _onDaySelected,
       onVisibleDaysChanged: _onVisibleDaysChanged,
     );
@@ -162,93 +215,93 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   
-  Widget _buildTableCalendarWithBuilders() {
-    return TableCalendar(
-      locale: 'en_US',
-      events: _visibleEvents,
-      holidays: _visibleHolidays,
-      initialCalendarFormat: CalendarFormat.twoWeeks,
-      formatAnimation: FormatAnimation.slide,
-      startingDayOfWeek: StartingDayOfWeek.sunday,
-      availableGestures: AvailableGestures.all,
-      availableCalendarFormats: const {
-        CalendarFormat.twoWeeks: '',
-      },
-      calendarStyle: CalendarStyle(
-        outsideDaysVisible: false,
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
-        holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
-      ),
-      headerStyle: HeaderStyle(
-        centerHeaderTitle: true,
-        formatButtonVisible: false,
-      ),
-      builders: CalendarBuilders(
-        selectedDayBuilder: (context, date, _) {
-          return FadeTransition(
-            opacity: Tween(begin: 0.0, end: 1.0).animate(_controller),
-            child: Container(
-              margin: const EdgeInsets.all(4.0),
-              padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-              color: Colors.deepOrange[300],
-              width: 100,
-              height: 100,
-              child: Text(
-                '${date.day}',
-                style: TextStyle().copyWith(fontSize: 16.0),
-              ),
-            ),
-          );
-        },
-        todayDayBuilder: (context, date, _) {
-          return Container(
-            margin: const EdgeInsets.all(4.0),
-            padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-            color: Colors.amber[400],
-            width: 100,
-            height: 100,
-            child: Text(
-              '${date.day}',
-              style: TextStyle().copyWith(fontSize: 16.0),
-            ),
-          );
-        },
-        // markersBuilder: (context, date, events, holidays) {
-        //   final children = <Widget>[];
+  // Widget _buildTableCalendarWithBuilders() {
+  //   return TableCalendar(
+  //     locale: 'en_US',
+  //     events: _visibleEvents,
+  //     holidays: _visibleHolidays,
+  //     initialCalendarFormat: CalendarFormat.twoWeeks,
+  //     formatAnimation: FormatAnimation.slide,
+  //     startingDayOfWeek: StartingDayOfWeek.sunday,
+  //     availableGestures: AvailableGestures.all,
+  //     availableCalendarFormats: const {
+  //       CalendarFormat.twoWeeks: '',
+  //     },
+  //     calendarStyle: CalendarStyle(
+  //       outsideDaysVisible: false,
+  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
+  //       holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
+  //     ),
+  //     daysOfWeekStyle: DaysOfWeekStyle(
+  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
+  //     ),
+  //     headerStyle: HeaderStyle(
+  //       centerHeaderTitle: true,
+  //       formatButtonVisible: false,
+  //     ),
+  //     builders: CalendarBuilders(
+  //       selectedDayBuilder: (context, date, _) {
+  //         return FadeTransition(
+  //           opacity: Tween(begin: 0.0, end: 1.0).animate(_controller),
+  //           child: Container(
+  //             margin: const EdgeInsets.all(4.0),
+  //             padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+  //             color: Colors.deepOrange[300],
+  //             width: 100,
+  //             height: 100,
+  //             child: Text(
+  //               '${date.day}',
+  //               style: TextStyle().copyWith(fontSize: 16.0),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //       todayDayBuilder: (context, date, _) {
+  //         return Container(
+  //           margin: const EdgeInsets.all(4.0),
+  //           padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+  //           color: Colors.amber[400],
+  //           width: 100,
+  //           height: 100,
+  //           child: Text(
+  //             '${date.day}',
+  //             style: TextStyle().copyWith(fontSize: 16.0),
+  //           ),
+  //         );
+  //       },
+  //       // markersBuilder: (context, date, events, holidays) {
+  //       //   final children = <Widget>[];
 
-        //   if (events.isNotEmpty) {
-        //     children.add(
-        //       Positioned(
-        //         right: 1,
-        //         bottom: 1,
-        //         child: _buildEventsMarker(date, events),
-        //       ),
-        //     );
-        //   }
+  //       //   if (events.isNotEmpty) {
+  //       //     children.add(
+  //       //       Positioned(
+  //       //         right: 1,
+  //       //         bottom: 1,
+  //       //         child: _buildEventsMarker(date, events),
+  //       //       ),
+  //       //     );
+  //       //   }
 
-        //   if (holidays.isNotEmpty) {
-        //     children.add(
-        //       Positioned(
-        //         right: -2,
-        //         top: -2,
-        //         child: _buildHolidaysMarker(),
-        //       ),
-        //     );
-        //   }
+  //       //   if (holidays.isNotEmpty) {
+  //       //     children.add(
+  //       //       Positioned(
+  //       //         right: -2,
+  //       //         top: -2,
+  //       //         child: _buildHolidaysMarker(),
+  //       //       ),
+  //       //     );
+  //       //   }
 
-        //   return children;
-        // },
-      ),
-      onDaySelected: (date, events) {
-        _onDaySelected(date, events);
-        _controller.forward(from: 0.0);
-      },
-      onVisibleDaysChanged: _onVisibleDaysChanged,
-    );
-  }
+  //       //   return children;
+  //       // },
+  //     ),
+  //     onDaySelected: (date, events) {
+  //       _onDaySelected(date, events);
+  //       _controller.forward(from: 0.0);
+  //     },
+  //     onVisibleDaysChanged: _onVisibleDaysChanged,
+  //   );
+  // }
 
   // Widget _buildEventsMarker(DateTime date, List events) {
   //   return AnimatedContainer(
@@ -281,21 +334,38 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   //   );
   // }
 
+
+
   Widget _buildEventList() {
     return ListView(
     children: _selectedEvents
-        .map((event) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: Card(
-        child: ListTile(
-         title: Text(event.toString(), style: TextStyle(fontWeight: FontWeight.w500),),
-         onTap: () => print('$event tapped!'),
+        .map((event) => Padding(
+          padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+          child: Container(
+          // decoration: BoxDecoration(
+          // borderRadius: BorderRadius.circular(18),    
+          // ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(6, 6, 6, 2),
+            child: Material(
+              // color: colour,
+              elevation: 2,
+              borderRadius: BorderRadius.circular(18),
+               child: ListTile(
+               title: Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Text(event.toString() , style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),),
+               ),
+               onTap: (){
+                //  color = false;
+                //  colour = color ? Colors.white : Colors.yellow;
+                 print('$event on $_selectedDay tapped!');
+               } 
+                  ),
             ),
           ),
       ),
+        ),
     )
         .toList(),
         );

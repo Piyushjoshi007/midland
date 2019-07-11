@@ -9,10 +9,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Color(0xffF7BC45),
-      ),
+      // theme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   scaffoldBackgroundColor: Colors.white,//Color(0xffF7BC45),
+      // ),
       title: 'Material App',
       initialRoute: Home.id,
       routes: {
