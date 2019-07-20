@@ -4,6 +4,7 @@
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'event.dart';
 
 // // Example holidays
 // final Map<DateTime, List> _holidays = {
@@ -17,17 +18,11 @@ import 'package:table_calendar/table_calendar.dart';
 String date = DateTime.now().day.toString();
 String month = DateTime.now().month.toString();
 String year = DateTime.now().year.toString();
-// bool color = true;
-// Color colour = Colors.white;
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-  
-
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -39,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Map<DateTime, List> _visibleEvents;
   List _selectedEvents;
   AnimationController _controller;
+  var _selectedEvent =  Event();
 
   @override
   void initState() {
@@ -46,82 +42,290 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _selectedDay = DateTime.now();
     _events = {
       _selectedDay: [
-        '6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
         '10:00 PM - 11:00 PM',
       ],
-      _selectedDay.add(Duration(days: 1)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 2)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 3)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 4)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 5)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 6)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 7)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 8)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 9)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 10)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 11)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 12)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 13)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
-         _selectedDay.add(Duration(days: 14)): Set.from(['6:00 AM - 7:00 AM','7:00 AM - 8:00 AM','8:00 AM - 9:00 AM','9:00 AM - 10:00 AM',
-        '10:00 AM - 11:00 AM','11:00 AM - 12:00 AM','12:00 PM - 1:00 PM','1:00 PM - 2:00 PM',
-        '2:00 PM - 3:00 PM','3:00 PM - 4:00 PM','4:00 PM - 5:00 PM','5:00 PM - 6:00 PM',
-        '6:00 PM - 7:00 PM','7:00 PM - 8:00 PM','8:00 PM - 9:00 PM','9:00 PM - 10:00 PM',
-        '10:00 PM - 11:00 PM',]).toList(),
+      _selectedDay.add(Duration(days: 1)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 2)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 3)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 4)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 5)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 6)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 7)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 8)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 9)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 10)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 11)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 12)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 13)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
+      _selectedDay.add(Duration(days: 14)): Set.from([
+        '6:00 AM - 7:00 AM',
+        '7:00 AM - 8:00 AM',
+        '8:00 AM - 9:00 AM',
+        '9:00 AM - 10:00 AM',
+        '10:00 AM - 11:00 AM',
+        '11:00 AM - 12:00 AM',
+        '12:00 PM - 1:00 PM',
+        '1:00 PM - 2:00 PM',
+        '2:00 PM - 3:00 PM',
+        '3:00 PM - 4:00 PM',
+        '4:00 PM - 5:00 PM',
+        '5:00 PM - 6:00 PM',
+        '6:00 PM - 7:00 PM',
+        '7:00 PM - 8:00 PM',
+        '8:00 PM - 9:00 PM',
+        '9:00 PM - 10:00 PM',
+        '10:00 PM - 11:00 PM',
+      ]).toList(),
     };
 
     _selectedEvents = _events[_selectedDay] ?? [];
@@ -143,7 +347,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+  void _onVisibleDaysChanged(
+      DateTime first, DateTime last, CalendarFormat format) {
     setState(() {
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
@@ -152,8 +357,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               entry.key.isBefore(last.add(const Duration(days: 1))),
         ),
       );
-
-      
 
       // _visibleHolidays = Map.fromEntries(
       //   _holidays.entries.where(
@@ -174,7 +377,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           // Switch out 2 lines below to play with TableCalendar's settings
           //-----------------------
           _buildTableCalendar(),
-         //_buildTableCalendarWithBuilders(),
+          //_buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
           Expanded(child: _buildEventList()),
         ],
@@ -183,7 +386,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   // Simple TableCalendar configuration (using Styles)
-  Widget _buildTableCalendar(){
+  Widget _buildTableCalendar() {
     return TableCalendar(
       headerVisible: true,
       startDay: DateTime.now().subtract(Duration(days: 1)),
@@ -214,7 +417,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   // More advanced TableCalendar configuration (using Builders & Styles)
-  
+
   // Widget _buildTableCalendarWithBuilders() {
   //   return TableCalendar(
   //     locale: 'en_US',
@@ -334,40 +537,89 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   //   );
   // }
 
-
-
   Widget _buildEventList() {
+    var boxdecoration;
     return ListView(
-    children: _selectedEvents
-        .map((event) => Padding(
-          padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
-          child: Container(
-          // decoration: BoxDecoration(
-          // borderRadius: BorderRadius.circular(18),    
-          // ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(6, 6, 6, 2),
-            child: Material(
-              // color: colour,
-              elevation: 2,
-              borderRadius: BorderRadius.circular(18),
-               child: ListTile(
-               title: Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: Text(event.toString() , style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),),
-               ),
-               onTap: (){
-                //  color = false;
-                //  colour = color ? Colors.white : Colors.yellow;
-                 print('$event on $_selectedDay tapped!');
-               } 
-                  ),
+      children: _selectedEvents
+          .map(
+            (event) => Container(
+              decoration: boxdecoration,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+                child: Material(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  elevation: 4,
+                  child: ListTile(
+                      subtitle: Text('Open for booking'),
+                      title: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          event.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      onLongPress: () {
+                        setState(() {
+                          _selectedEvent = event;
+                          if(_selectedEvent == event){
+                             boxdecoration = BoxDecoration(
+                                 color : Colors.amber,
+                            );
+                            }
+                        });
+                      }),
+                      
+                ),
+                
+              ),
             ),
-          ),
-      ),
-        ),
-    )
-        .toList(),
-        );
+          )
+          .toList(),
+    );
+    
+
   }
+
+  // Widget _reallist() {
+  //   return ListView.builder(
+  //     itemCount: _selectedEvents.length,
+  //     itemBuilder: (context, position) {
+  //       if(_selectedEvent == eventname){
+
+  //       }
+  //       return Padding(
+  //         padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+  //         child: Material(
+  //           borderRadius: BorderRadius.only(
+  //               topRight: Radius.circular(20),
+  //               bottomLeft: Radius.circular(20),
+  //               bottomRight: Radius.circular(20)),
+  //           elevation: 4,
+  //           child: ListTile(
+  //             subtitle: Text('Open for booking'),
+  //             title: Padding(
+  //               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+  //               child: Text(
+  //                 _selectedEvents[position],
+  //                 style: TextStyle(
+  //                   fontWeight: FontWeight.w500,
+  //                   fontSize: 18,
+  //                 ),
+  //               ),
+  //             ),
+  //             onTap: (){
+  //               _selectedEvent = _events;
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

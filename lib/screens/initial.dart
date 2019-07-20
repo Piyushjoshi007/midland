@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Init extends StatefulWidget {
+  static String id = 'initial';
   _InitState createState() => _InitState();
 }
 

@@ -6,6 +6,7 @@ import 'package:midlandfinal/screens/booking.dart';
 import 'package:midlandfinal/screens/admission.dart';
 import 'package:midlandfinal/screens/cart.dart';
 
+
 class Home extends StatefulWidget {
   
   static const String id = 'homescreen2';

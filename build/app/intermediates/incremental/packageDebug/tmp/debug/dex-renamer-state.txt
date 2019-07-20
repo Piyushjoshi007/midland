@@ -1,4 +1,4 @@
-#Sun Jul 07 23:03:05 IST 2019
+#Sat Jul 20 10:45:40 IST 2019
 base.0=/Users/sls/Desktop/mid/build/app/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex
