@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:midlandfinal/screens/booking.dart';
 import 'package:midlandfinal/screens/admission.dart';
 import 'package:midlandfinal/screens/cart.dart';
+import 'package:midlandfinal/screens/forms.dart';
 
 
 class Home extends StatefulWidget {

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       //   scaffoldBackgroundColor: Colors.white,//Color(0xffF7BC45),
       // ),
       title: 'Material App',
-      initialRoute: UserBookings.id,
+      initialRoute: Home.id,
       routes: {
         Login.id : (context) => Login(),
         HomeScreen.id : (context) => HomeScreen(),

@@ -1,19 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:midlandfinal/src/calender.dart';
-import 'package:midlandfinal/screens/homescreen2.dart';
 import 'package:midlandfinal/screens/navigationButton.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:midlandfinal/screens/userbookings.dart';
+
+
 
 
 class Booking extends StatefulWidget {
+
+
+  
   Booking({Key key}) : super(key: key);
 
   _BookingState createState() => _BookingState();
 }
 
+
 class _BookingState extends State<Booking> {
-  int currentPage = 0;
+      int currentPage = 0;
+      int _selectedIndex = 0;
+        PageController _pageController = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
+
+  void pageChanged(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
+}
+
+  Widget buildPageView() {
+    return PageView(
+      controller: _pageController,
+      onPageChanged: (index) {
+        pageChanged(index);
+      },
+      children: <Widget>[
+        Booking(),
+        UserBookings(),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -41,33 +70,73 @@ class _BookingState extends State<Booking> {
                   Navigator.pushNamed(context, Cart.id);
                 },
                 label: Text('Tap to book'),
-                // child: Column(
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: <Widget>[
-                //     SizedBox(
-                //       height: deviceHeight/35,
-                //       width: deviceWidth/12,
-                //       child: Container(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(8),
-                //           color: Colors.white,
-                //         ),
-                //         child: Center(child: Text('Proceed with 2 booking',style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),)),
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ),
             ),
           ),
+          
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        bottomNavigationBar: BubbleBottomBar(
-          opacity: .2,
-          currentIndex: currentPage,
+//           bottomNavigationBar: BottomNavyBar(
+//    selectedIndex: _selectedIndex,
+//    showElevation: true, // use this to remove appBar's elevation
+//    onItemSelected: (index) => setState(() {
+//               _selectedIndex = index;
+//               _pageController.animateToPage(index,
+//                   duration: Duration(milliseconds: 300), curve: Curves.ease);
+//     }),
+//    items: [
+//      BottomNavyBarItem(
+//        icon: Icon(Icons.apps),
+//        title: Text('Home'),
+//        activeColor: Colors.red,
+//      ),
+//      BottomNavyBarItem(
+//          icon: Icon(Icons.people),
+//          title: Text('Users'),
+//          activeColor: Colors.purpleAccent
+//      ),
+//      BottomNavyBarItem(
+//          icon: Icon(Icons.message),
+//          title: Text('Messages'),
+//          activeColor: Colors.pink
+//      ),
+//      BottomNavyBarItem(
+//          icon: Icon(Icons.settings),
+//          title: Text('Settings'),
+//          activeColor: Colors.blue
+//      ),
+//    ],
+// ),
+
+
+
+          // bottomNavigationBar: DefaultTabController(
+          //   length: 1,
+          //             child: BottomNavigationBar(
+          //     items: <BottomNavigationBarItem>[
+          //       BottomNavigationBarItem(
+          //         icon: Icon(Icons.list),
+          //         title: Text('Time Table'),
+          //       ),
+          //        BottomNavigationBarItem(
+          //         icon: Icon(Icons.person),
+          //         title: Text('Bookings'),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+        bottomNavigationBar: DefaultTabController(
+          length: 2,
+                  child: BubbleBottomBar(
+           opacity: .2,
+          currentIndex: _selectedIndex,
           onTap: (position){
             setState(() {
               currentPage = position;
+              if(currentPage == 1){
+                Navigator.pushNamed(context, UserBookings.id);
+              }else{
+                Navigator.canPop(context);
+              }
             });
           },
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -80,8 +149,9 @@ class _BookingState extends State<Booking> {
               BubbleBottomBarItem(backgroundColor: Colors.red, icon: Icon(Icons.featured_play_list, color: Colors.black,), activeIcon: Icon(Icons.featured_play_list, color: Colors.red,), title: Text("Time Table", style: TextStyle(fontSize: 10),)),
               BubbleBottomBarItem(backgroundColor: Colors.green, icon: Icon(Icons.person, color: Colors.black,), activeIcon: Icon(Icons.person, color: Colors.green,), title: Text("Bookings")),
           ],
+          ),
         ),
-          
-          );
+      );
+      
   }
 }
