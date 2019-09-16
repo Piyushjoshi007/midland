@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1000755381775",
+    "firebase_url": "https://midlandunitedfc-fd958.firebaseio.com",
+    "project_id": "midlandunitedfc-fd958",
+    "storage_bucket": "midlandunitedfc-fd958.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000755381775:android:7b5a17b4b1cf58b6",
+        "android_client_info": {
+          "package_name": "com.softwareWala.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000755381775-b8kbofmfd9tllu236l2r72ttg9t6dvun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdo_54x24WJJraNtYs2G6u5N01EcKKNMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000755381775-b8kbofmfd9tllu236l2r72ttg9t6dvun.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1000755381775-kektfa585c7eni170diqof2aqs4fhvto.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.softwareWala.admin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

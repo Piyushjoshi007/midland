@@ -5,11 +5,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:midlandfinal/screens/booking.dart';
 import 'package:midlandfinal/screens/admission.dart';
 import 'package:midlandfinal/screens/cart.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:midlandfinal/Login_Options/google login/google_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:midlandfinal/screens/forms.dart';
 
 
+
 class Home extends StatefulWidget {
-  
+  //  final GoogleSignInAccount googleUser;
+  // final FirebaseUser firebaseUser;
+
+  // const Home(
+  //     {Key key, @required this.googleUser, @required this.firebaseUser})
+  //     : assert(googleUser != null),
+  //       assert(firebaseUser != null),
+  //       super(key: key);
   static const String id = 'homescreen2';
 
   _HomeState createState() => _HomeState();
@@ -79,7 +90,7 @@ class _HomeState extends State<Home> {
                 body: TabBarView(
                   children: <Widget>[
                     Booking(),
-                    Admission(),
+                    Forms(),
                     Cart(),
                   ],
                 ),

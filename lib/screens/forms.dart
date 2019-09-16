@@ -1,157 +1,187 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:midlandfinal/src/calender.dart';
 
 
 final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
 class Forms extends StatelessWidget {
   const Forms({Key key}) : super(key: key);
-
+  static const String id = 'forms';
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-          child: Column(
-  children: <Widget>[
-      FormBuilder(
-        key: _fbKey,
-        autovalidate: true,
-        child: Column(
-          children: <Widget>[
-            FormBuilderDateTimePicker(
-              attribute: "date",
-              // inputType: 
-              // format: DateFormat("yyyy-MM-dd"),
-              decoration:
-                  InputDecoration(labelText: "Appointment Time"),
-            ),
-            FormBuilderSlider(
-              attribute: "slider",
-              validators: [FormBuilderValidators.min(6)],
-              min: 0.0,
-              max: 10.0,
-              initialValue: 1.0,
-              divisions: 20,
-              decoration:
-                  InputDecoration(labelText: "Number of somethings"),
-            ),
-            FormBuilderCheckbox(
-              attribute: 'accept_terms',
-              initialValue: false,
-              label: Text(
-                  "I have read and agree to the terms and conditions"),
-              validators: [
-                FormBuilderValidators.requiredTrue(
-                  errorText:
-                      "You must accept terms and conditions to continue",
-                ),
-              ],
-            ),
-            FormBuilderDropdown(
-              attribute: "gender",
-              decoration: InputDecoration(labelText: "Gender"),
-              // initialValue: 'Male',
-              hint: Text('Select Gender'),
-              validators: [FormBuilderValidators.required()],
-              items: ['Male', 'Female', 'Other']
-                .map((gender) => DropdownMenuItem(
-                   value: gender,
-                   child: Text("$gender")
-              )).toList(),
-            ),
-            FormBuilderTextField(
-              attribute: "age",
-              decoration: InputDecoration(labelText: "Age"),
-              validators: [
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.max(70),
-              ],
-            ),
-            FormBuilderRadio(
-              decoration: InputDecoration(labelText: 'My chosen language'),
-              leadingInput: true,
-              attribute: "best_language",
-              validators: [FormBuilderValidators.required()],
-              options: [
-                "Dart",
-                "Kotlin",
-                "Java",
-                "Swift",
-                "Objective-C"
-              ]
-                  .map((lang) => FormBuilderFieldOption(value: lang))
-                  .toList(growable: false),
-            ),
-            FormBuilderSegmentedControl(
-              decoration:
-                  InputDecoration(labelText: "Movie Rating (Archer)"),
-              attribute: "movie_rating",
-              options: List.generate(5, (i) => i + 1)
-                  .map(
-                      (number) => FormBuilderFieldOption(value: number))
-                  .toList(),
-            ),
-            FormBuilderSwitch(
-              label: Text('I Accept the tems and conditions'),
-              attribute: "accept_terms_switch",
-              initialValue: true,
-            ),
-            FormBuilderStepper(
-              decoration: InputDecoration(labelText: "Stepper"),
-              attribute: "stepper",
-              initialValue: 10,
-              step: 1,
-            ),
-            FormBuilderRate(
-              decoration: InputDecoration(labelText: "Rate this form"),
-              attribute: "rate",
-              iconSize: 32.0,
-              initialValue: 1,
-              max: 5,
-            ),
-            FormBuilderCheckboxList(
-              decoration:
-              InputDecoration(labelText: "The language of my people"),
-              attribute: "languages",
-              initialValue: ["Dart"],
-              options: [
-                FormBuilderFieldOption(value: "Dart"),
-                FormBuilderFieldOption(value: "Kotlin"),
-                FormBuilderFieldOption(value: "Java"),
-                FormBuilderFieldOption(value: "Swift"),
-                FormBuilderFieldOption(value: "Objective-C"),
-              ],
-            ),
-            FormBuilderSignaturePad(
-              decoration: InputDecoration(labelText: "Signature"),
-              attribute: "signature",
-              height: 100,
-            ),
-          ],
-        ),
-      ),
-      Row(
+    return Scaffold(
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Container(
+      color: Color(0xffE5E5E5),
+      child: Column(
         children: <Widget>[
-          MaterialButton(
-            child: Text("Submit"),
-            onPressed: () {
-              _fbKey.currentState.save();
-              if (_fbKey.currentState.validate()) {
-                print(_fbKey.currentState.value);
-              }
-            },
+          Container(
+            padding: EdgeInsets.all(18),
+            child: Container(
+              child: Text(
+                'We will contact you as soon as possible',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
-          MaterialButton(
-            child: Text("Reset"),
-            onPressed: () {
-              _fbKey.currentState.reset();
-            },
+          FormBuilder(
+            key: _fbKey,
+            autovalidate: true,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: EdgeInsets.all(9),
+                  child: Column(
+                    children: <Widget>[
+                      FormBuilderTextField(
+                        attribute: "Student-Name",
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person),
+                          labelText: "Name of Child",
+                          hintText: "Full Name",
+                        ),
+                        validators: [
+                          FormBuilderValidators.required(),
+                        ],
+                      ),
+                      FormBuilderDateTimePicker(
+                        decoration: InputDecoration(
+                            icon: Icon(Icons.calendar_today),
+                            labelText: "Birthdate"),
+                        attribute: "Birth-Date",
+                        inputType: InputType.date,
+                      ),
+                      FormBuilderTextField(
+                        attribute: "Parents-Name",
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person),
+                          labelText: "Enter Parents Name",
+                          hintText: "Full Name",
+                        ),
+                        validators: [
+                          FormBuilderValidators.date(),
+                          FormBuilderValidators.required(),
+                        ],
+                      ),
+                      FormBuilderTextField(
+                          attribute: "Parents-Number",
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.phone_iphone),
+                            labelText: "Parents Number",
+                            hintText: "Best number to reach You",
+                          ),
+                          keyboardType: TextInputType.number,
+                          validators: [
+                            FormBuilderValidators.maxLength(10,
+                                errorText:
+                                    "Value must have a length equal to 10"),
+                            FormBuilderValidators.minLength(10,
+                                errorText:
+                                    "Value must have a length equal to 10"),
+                            FormBuilderValidators.required(),
+                          ]),
+                      FormBuilderDropdown(
+                        attribute: "gender",
+                        decoration: InputDecoration(
+                          labelText: "Gender",
+                          icon: Icon(Icons.child_friendly),
+                        ),
+                        // initialValue: 'Male',
+                        hint: Text('Select Gender'),
+                        validators: [FormBuilderValidators.required()],
+                        items: ['Male', 'Female', 'Other']
+                            .map((gender) => DropdownMenuItem(
+                                value: gender, child: Text("$gender")))
+                            .toList(),
+                      ),
+                      FormBuilderSlider(
+                        attribute: "age",
+                        decoration: InputDecoration(
+                            labelText: "Age", icon: Icon(Icons.child_care)),
+                        initialValue: 10.0,
+                        min: 7.0,
+                        max: 17.0,
+                        divisions: 10,
+                      ),
+                      FormBuilderDropdown(
+                        attribute: "Location",
+                        decoration: InputDecoration(
+                          labelText: 'Preffered Location',
+                          hintText: 'Select Location',
+                          icon: Icon(Icons.location_on),
+                        ),
+                        validators: [
+                          FormBuilderValidators.required(),
+                        ],
+                        items: ['Omkar Nagar', 'New Sneh Nagar']
+                            .map((location) => DropdownMenuItem(
+                                value: location, child: Text("$location")))
+                            .toList(),
+                      ),
+                      FormBuilderCheckbox(
+                        attribute: 'accept_terms',
+                        initialValue: false,
+                        label: Text(
+                            "I have read and agree to the terms and conditions"),
+                        validators: [
+                          FormBuilderValidators.requiredTrue(
+                            errorText:
+                                "You must accept terms and conditions to continue",
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+                disabledColor: Colors.grey,
+                elevation: 2,
+                onPressed: () {
+                  _fbKey.currentState.save();
+                  if (_fbKey.currentState.validate()) {
+                    print(_fbKey.currentState.value);
+                  }
+                },
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+                disabledColor: Colors.grey,
+                elevation: 2,
+                onPressed: () {
+                  _fbKey.currentState.reset();
+                },
+              ),
+            ],
+          )
         ],
-      )
-  ],
-),
-    );
+      ),
+    ))));
   }
 }

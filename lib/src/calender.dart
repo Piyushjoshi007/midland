@@ -1,28 +1,18 @@
-//  Copyright (c) 2019 Aleksander Woźniak
-//  Licensed under Apache License v2.0
-
-import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-// // Example holidays
-// final Map<DateTime, List> _holidays = {
-//   DateTime(2019, 1, 1): ['New Year\'s Day'],
-//   DateTime(2019, 1, 6): ['Epiphany'],
-//   DateTime(2019, 2, 14): ['Valentine\'s Day'],
-//   DateTime(2019, 4, 21): ['Easter Sunday'],
-//   DateTime(2019, 4, 22): ['Easter Monday'],
-// };
-
-String date = DateTime.now().day.toString();
-String month = DateTime.now().month.toString();
-String year = DateTime.now().year.toString();
+// Example holidays
+final Map<DateTime, List> _holidays = {
+  DateTime(2019, 1, 1): ['New Year\'s Day'],
+  DateTime(2019, 1, 6): ['Epiphany'],
+  DateTime(2019, 2, 14): ['Valentine\'s Day'],
+  DateTime(2019, 4, 21): ['Easter Sunday'],
+  DateTime(2019, 4, 22): ['Easter Monday'],
+};
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -32,9 +22,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   DateTime _selectedDay;
   Map<DateTime, List> _events;
   Map<DateTime, List> _visibleEvents;
+  Map<DateTime, List> _visibleHolidays;
   List _selectedEvents;
   AnimationController _controller;
-  var _selectedEvent =  Event();
+  MediaQueryData queryData;
+  String dropdownValue = 'Venu - 1: Omkar Nagar';
+
+  String get _thisDay => _selectedDay.day.toString();
 
   @override
   void initState() {
@@ -330,11 +324,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
-    // _visibleHolidays = _holidays;
+    _visibleHolidays = _holidays;
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
     );
 
     _controller.forward();
@@ -358,18 +352,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
       );
 
-      // _visibleHolidays = Map.fromEntries(
-      //   _holidays.entries.where(
-      //     (entry) =>
-      //         entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-      //         entry.key.isBefore(last.add(const Duration(days: 1))),
-      //   ),
-      // );
+      _visibleHolidays = Map.fromEntries(
+        _holidays.entries.where(
+          (entry) =>
+              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
+              entry.key.isBefore(last.add(const Duration(days: 1))),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    queryData = MediaQuery.of(context);
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -377,9 +372,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           // Switch out 2 lines below to play with TableCalendar's settings
           //-----------------------
           _buildTableCalendar(),
-          //_buildTableCalendarWithBuilders(),
+          // _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
-          Expanded(child: _buildEventList()),
+          Expanded(child: _reallist(context)),
         ],
       ),
     );
@@ -393,233 +388,204 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       endDay: DateTime.now().add(Duration(days: 13)),
       locale: 'en_US',
       events: _visibleEvents,
+      holidays: _visibleHolidays,
       initialCalendarFormat: CalendarFormat.week,
       formatAnimation: FormatAnimation.slide,
       startingDayOfWeek: StartingDayOfWeek.monday,
       availableGestures: AvailableGestures.all,
       availableCalendarFormats: const {
-        CalendarFormat.week: '',
+        CalendarFormat.week: 'Week',
       },
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         todayColor: Colors.deepOrange[200],
+        markersColor: Colors.transparent,
       ),
-      // headerStyle: HeaderStyle(
-      //   formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-      //   formatButtonDecoration: BoxDecoration(
-      //     color: Colors.deepOrange[400],
-      //     borderRadius: BorderRadius.circular(16.0),
-      //   ),
-      // ),
       onDaySelected: _onDaySelected,
       onVisibleDaysChanged: _onVisibleDaysChanged,
     );
   }
 
-  // More advanced TableCalendar configuration (using Builders & Styles)
 
-  // Widget _buildTableCalendarWithBuilders() {
-  //   return TableCalendar(
-  //     locale: 'en_US',
-  //     events: _visibleEvents,
-  //     holidays: _visibleHolidays,
-  //     initialCalendarFormat: CalendarFormat.twoWeeks,
-  //     formatAnimation: FormatAnimation.slide,
-  //     startingDayOfWeek: StartingDayOfWeek.sunday,
-  //     availableGestures: AvailableGestures.all,
-  //     availableCalendarFormats: const {
-  //       CalendarFormat.twoWeeks: '',
-  //     },
-  //     calendarStyle: CalendarStyle(
-  //       outsideDaysVisible: false,
-  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
-  //       holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
-  //     ),
-  //     daysOfWeekStyle: DaysOfWeekStyle(
-  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
-  //     ),
-  //     headerStyle: HeaderStyle(
-  //       centerHeaderTitle: true,
-  //       formatButtonVisible: false,
-  //     ),
-  //     builders: CalendarBuilders(
-  //       selectedDayBuilder: (context, date, _) {
-  //         return FadeTransition(
-  //           opacity: Tween(begin: 0.0, end: 1.0).animate(_controller),
-  //           child: Container(
-  //             margin: const EdgeInsets.all(4.0),
-  //             padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-  //             color: Colors.deepOrange[300],
-  //             width: 100,
-  //             height: 100,
-  //             child: Text(
-  //               '${date.day}',
-  //               style: TextStyle().copyWith(fontSize: 16.0),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //       todayDayBuilder: (context, date, _) {
-  //         return Container(
-  //           margin: const EdgeInsets.all(4.0),
-  //           padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-  //           color: Colors.amber[400],
-  //           width: 100,
-  //           height: 100,
-  //           child: Text(
-  //             '${date.day}',
-  //             style: TextStyle().copyWith(fontSize: 16.0),
-  //           ),
-  //         );
-  //       },
-  //       // markersBuilder: (context, date, events, holidays) {
-  //       //   final children = <Widget>[];
 
-  //       //   if (events.isNotEmpty) {
-  //       //     children.add(
-  //       //       Positioned(
-  //       //         right: 1,
-  //       //         bottom: 1,
-  //       //         child: _buildEventsMarker(date, events),
-  //       //       ),
-  //       //     );
-  //       //   }
 
-  //       //   if (holidays.isNotEmpty) {
-  //       //     children.add(
-  //       //       Positioned(
-  //       //         right: -2,
-  //       //         top: -2,
-  //       //         child: _buildHolidaysMarker(),
-  //       //       ),
-  //       //     );
-  //       //   }
-
-  //       //   return children;
-  //       // },
-  //     ),
-  //     onDaySelected: (date, events) {
-  //       _onDaySelected(date, events);
-  //       _controller.forward(from: 0.0);
-  //     },
-  //     onVisibleDaysChanged: _onVisibleDaysChanged,
-  //   );
-  // }
-
-  // Widget _buildEventsMarker(DateTime date, List events) {
-  //   return AnimatedContainer(
-  //     duration: const Duration(milliseconds: 300),
-  //     decoration: BoxDecoration(
-  //       shape: BoxShape.rectangle,
-  //       color: Utils.isSameDay(date, _selectedDay)
-  //           ? Colors.brown[500]
-  //           : Utils.isSameDay(date, DateTime.now()) ? Colors.brown[300] : Colors.blue[400],
-  //     ),
-  //     width: 16.0,
-  //     height: 16.0,
-  //     child: Center(
-  //       child: Text(
-  //         '${events.length}',
-  //         style: TextStyle().copyWith(
-  //           color: Colors.white,
-  //           fontSize: 12.0,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildHolidaysMarker() {
-  //   return Icon(
-  //     Icons.add_box,
-  //     size: 20.0,
-  //     color: Colors.blueGrey[800],
-  //   );
-  // }
-
-  Widget _buildEventList() {
-    var boxdecoration;
-    return ListView(
-      children: _selectedEvents
-          .map(
-            (event) => Container(
-              decoration: boxdecoration,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
-                child: Material(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20)),
-                  elevation: 4,
-                  child: ListTile(
-                      subtitle: Text('Open for booking'),
-                      title: Padding(
-                        padding: const EdgeInsets.all(8.0),
+  Widget _reallist(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('/$dropdownValue/days/$_thisDay').orderBy('documentId').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) return Text('Loading..');
+        return Column(
+          children: <Widget>[
+            Container(
+              height: queryData.size.height / 15,
+              width: queryData.size.width / 1.5,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: Color(0xffF7BC45),
+              ),
+              child: Center(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownValue = newValue;
+                      });
+                    },
+                    items: <String>[
+                      'Venu - 1: Omkar Nagar',
+                      'Venu - 2: New Sneh Nagar',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
                         child: Text(
-                          event.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ),
+                          value,
+                          style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
-                      ),
-                      onLongPress: () {
-                        setState(() {
-                          _selectedEvent = event;
-                          if(_selectedEvent == event){
-                             boxdecoration = BoxDecoration(
-                                 color : Colors.amber,
-                            );
-                            }
-                        });
-                      }),
-                      
+                      );
+                    }).toList(),
+                  ),
                 ),
-                
               ),
             ),
-          )
-          .toList(),
+            SizedBox(
+              height: queryData.size.height/40,
+            ),
+            Flexible(
+              child: ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) =>
+                    _buildList(context, snapshot.data.documents[index]),
+              ),
+            ),
+          ],
+        );
+      },
     );
-    
-
   }
 
-  // Widget _reallist() {
-  //   return ListView.builder(
-  //     itemCount: _selectedEvents.length,
-  //     itemBuilder: (context, position) {
-  //       if(_selectedEvent == eventname){
 
-  //       }
-  //       return Padding(
-  //         padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
-  //         child: Material(
-  //           borderRadius: BorderRadius.only(
-  //               topRight: Radius.circular(20),
-  //               bottomLeft: Radius.circular(20),
-  //               bottomRight: Radius.circular(20)),
-  //           elevation: 4,
-  //           child: ListTile(
-  //             subtitle: Text('Open for booking'),
-  //             title: Padding(
-  //               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-  //               child: Text(
-  //                 _selectedEvents[position],
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.w500,
-  //                   fontSize: 18,
-  //                 ),
-  //               ),
-  //             ),
-  //             onTap: (){
-  //               _selectedEvent = _events;
-  //             },
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Widget _buildList(BuildContext context, DocumentSnapshot document) {
+    final record = Record.fromSnapshot(document);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+      child: Material(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+            topLeft: Radius.circular(20)),
+        elevation: 5,
+       child: Stack(
+          children: <Widget>[
+              ListTile(
+                onLongPress: (){},
+                trailing:  RaisedButton(
+              splashColor: Colors.yellowAccent,
+              onPressed: record.isNotBooked ? (){
+                Firestore.instance.runTransaction((transaction) async {
+                  await transaction.get(record.reference);
+                  await transaction.update(record.reference, {
+                    'trailing' : record.trailing == 'Select' ? 'Deselect' : 'Select',
+                    'isNotBooked': record.isNotBooked ? false : true,
+                    'subTitle': record.subTitle == "Reserved"
+                        ? "Open for Booking"
+                        : "Booking....",
+                  });
+                });
+                 } : (){
+                   Firestore.instance.runTransaction((transaction) async {
+                  await transaction.get(record.reference);
+                  await transaction.update(record.reference, {
+                    'trailing' : record.trailing == 'Select' ? 'Deselect' : 'Select',
+                    'isNotBooked': record.isNotBooked ? false : true,
+                    'subTitle': record.subTitle == "Reserved"
+                        ?   "Booking...."
+                        :   "Open for Booking"
+                  });
+                });
+              },
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              child: Text(record.trailing,style: TextStyle(color: Colors.white),),
+              color: Colors.black,
+              disabledColor: Colors.grey,
+            ),
+            enabled: record.isNotBooked,
+            subtitle: Text(record.subTitle),
+            title: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                record.listTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+                ),
+            ),
+              ),
+          ]
+       )
+      )
+          );
+        // child: ListTile(
+        //   enabled: record.isNotBooked,
+        //   subtitle: Text(record.subTitle),
+        //   trailing: RaisedButton(
+        //     splashColor: Colors.yellowAccent,
+        //     onPressed: record.isNotBooked ? (){
+        //       Firestore.instance.runTransaction((transaction) async {
+        //         await transaction.get(record.reference);
+        //         await transaction.update(record.reference, {
+        //           'isNotBooked': record.isNotBooked ? false : true,
+        //           'subTitle': record.subTitle == "Reserved"
+        //               ? "Open for Booking"
+        //               : "Booking....",
+        //         });
+        //       });
+        //     } : null,
+        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        //     child: Text('Select',style: TextStyle(color: Colors.white),),
+        //     color: Colors.black,
+        //     disabledColor: Colors.grey,
+        //   ),
+        //   title: Padding(
+        //     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        //     child: Text(
+        //       record.listTitle,
+        //       style: TextStyle(
+        //         fontWeight: FontWeight.w500,
+        //         fontSize: 18,
+        //       ),
+        //     ),
+        //   ),
+     }
+          // ),
+  }
+
+class Record {
+  final bool isNotBooked;
+  final String leading;
+  final String listTitle;
+  final String subTitle;
+  final String trailing;
+  final DocumentReference reference;
+
+  Record.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['isNotBooked'] != null),
+        assert(map['leading'] != null),
+        assert(map['listTitle'] != null),
+        assert(map['subTitle'] != null),
+        assert(map['trailing'] != null),
+        isNotBooked = map['isNotBooked'],
+        leading = map['leading'],
+        listTitle = map['listTitle'],
+        subTitle = map['subTitle'],
+        trailing = map['trailing'];
+
+  Record.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  @override
+  String toString() =>
+      "Record<$isNotBooked:$leading:$listTitle:$subTitle:$trailing>";
 }
