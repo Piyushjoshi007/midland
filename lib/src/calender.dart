@@ -482,15 +482,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 onLongPress: (){},
                 trailing:  RaisedButton(
               splashColor: Colors.yellowAccent,
-              onPressed: record.isNotBooked ? (){
+              onPressed: record.subTitle == "Reserved" ? null : record.isNotBooked ? (){
                 Firestore.instance.runTransaction((transaction) async {
                   await transaction.get(record.reference);
                   await transaction.update(record.reference, {
                     'trailing' : record.trailing == 'Select' ? 'Deselect' : 'Select',
                     'isNotBooked': record.isNotBooked ? false : true,
-                    'subTitle': record.subTitle == "Reserved"
-                        ? "Open for Booking"
-                        : "Booking....",
+                    'subTitle': record.subTitle == "Open For Booking"
+                        ? "Booking...."
+                        : "Open For Booking",
                   });
                 });
                  } : (){
@@ -499,9 +499,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   await transaction.update(record.reference, {
                     'trailing' : record.trailing == 'Select' ? 'Deselect' : 'Select',
                     'isNotBooked': record.isNotBooked ? false : true,
-                    'subTitle': record.subTitle == "Reserved"
-                        ?   "Booking...."
-                        :   "Open for Booking"
+                    'subTitle': record.subTitle == "Booking...."
+                        ?   "Open For Booking"
+                        :   "Booking...."
                   });
                 });
               },

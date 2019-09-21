@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 
 final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
+
 class Forms extends StatelessWidget {
   const Forms({Key key}) : super(key: key);
   static const String id = 'forms';
+  
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class Forms extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       FormBuilderTextField(
-                        attribute: "Student-Name",
+                        attribute: "Student_Name",
                         decoration: InputDecoration(
                           icon: Icon(Icons.person),
                           labelText: "Name of Child",
@@ -50,29 +53,29 @@ class Forms extends StatelessWidget {
                         ),
                         validators: [
                           FormBuilderValidators.required(),
+                          FormBuilderValidators.minLength(5),
                         ],
                       ),
                       FormBuilderDateTimePicker(
                         decoration: InputDecoration(
                             icon: Icon(Icons.calendar_today),
                             labelText: "Birthdate"),
-                        attribute: "Birth-Date",
+                        attribute: "Birth_Date",
                         inputType: InputType.date,
                       ),
                       FormBuilderTextField(
-                        attribute: "Parents-Name",
+                        attribute: "Parents_Name",
                         decoration: InputDecoration(
                           icon: Icon(Icons.person),
                           labelText: "Enter Parents Name",
                           hintText: "Full Name",
                         ),
                         validators: [
-                          FormBuilderValidators.date(),
                           FormBuilderValidators.required(),
                         ],
                       ),
                       FormBuilderTextField(
-                          attribute: "Parents-Number",
+                          attribute: "Parents_Number",
                           decoration: InputDecoration(
                             icon: Icon(Icons.phone_iphone),
                             labelText: "Parents Number",
@@ -160,7 +163,20 @@ class Forms extends StatelessWidget {
                 onPressed: () {
                   _fbKey.currentState.save();
                   if (_fbKey.currentState.validate()) {
-                    print(_fbKey.currentState.value);
+                    Firestore.instance
+                      .collection('Admission')
+                      .document()
+                      .setData({
+                    'Time': DateTime.now(),
+                    'Student_Name' : _fbKey.currentState.value["Student_Name"],
+                    "Birth_Date" : _fbKey.currentState.value["Birth_Date"],
+                    'Location' : _fbKey.currentState.value["Location"],
+                    'Parents_Name' : _fbKey.currentState.value["Parents_Name"],
+                    'Parents_Number' : _fbKey.currentState.value["Parents_Number"],
+                    'accept_terms' : _fbKey.currentState.value["accept_terms"],
+                    'age' : _fbKey.currentState.value["age"],
+                    'gender' : _fbKey.currentState.value["gender"],
+                  });
                   }
                 },
               ),
